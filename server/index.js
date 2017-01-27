@@ -26,6 +26,11 @@ app.use('/graphql', expressGraphQL(req => ({
   graphiql: process.env.NODE_ENV !== 'production',
   rootValue: { request: req },
   pretty: process.env.NODE_ENV !== 'production',
+  formatError: error => ({
+    message: error.message,
+    locations: error.locations,
+    stack: error.stack
+  })
 })));
 
 // In production we need to pass these values in instead of relying on webpack

@@ -1,4 +1,5 @@
-var workDb = require('../../nedb');
+var db = require('../../nedb'),
+workDb = db.workDb;
 const Work = {};
 
 Work.find = (args) => {

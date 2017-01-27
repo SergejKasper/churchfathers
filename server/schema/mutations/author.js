@@ -6,7 +6,7 @@ module.exports = {};
 
 module.exports.author_create = {
   type: types.author,
-  description: 'add new category',
+  description: 'add new author',
   args: {
     name: {
       type: graphql.GraphQLString
@@ -18,12 +18,12 @@ module.exports.author_create = {
       type: graphql.GraphQLString
     }
   },
-  resolve: (_, args) => resolvers.Author.create(args),
+  resolve: (_, args) => resolvers.author.create(args),
 }
 
 module.exports.author_update = {
   type: types.author,
-  description: 'update category',
+  description: 'update author',
   args: {
     _id: {
       type: graphql.GraphQLString
@@ -38,15 +38,15 @@ module.exports.author_update = {
       type: graphql.GraphQLString
     }
   },
-  resolve: (_, args) => resolvers.Author.update(args),
+  resolve: (_, args) => resolvers.author.update(args),
 };
 module.exports.author_remove = {
   type: types.author,
-  description: 'remove category',
+  description: 'remove author',
   args: {
     _id: {
       type: graphql.GraphQLString
     },
   },
-  resolve: (_, args) => resolvers.Author.remove(args),
+  resolve: (_, args) => resolvers.author.remove(args),
 };

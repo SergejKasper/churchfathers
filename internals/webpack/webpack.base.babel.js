@@ -17,6 +17,12 @@ module.exports = (options) => ({
       loader: 'babel-loader',
       exclude: /node_modules/,
       query: options.babelQuery,
+    },{
+      test: /\.jsx$/, // Transform all .js files required somewhere with Babel
+      loader: 'babel-loader',
+      exclude: /node_modules/,
+      include: /node_modules\/graphql-auto-generating-cms\/src/,
+      query: options.babelQuery,
     }, {
       // Do not transform vendor's CSS with CSS-modules
       // The point is that they remain in global scope.

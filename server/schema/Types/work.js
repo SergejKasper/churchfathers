@@ -16,7 +16,6 @@ const work = new graphql.GraphQLObjectType({
   fields: {
     _id: { type: graphql.GraphQLString },
     name: { type: graphql.GraphQLString },
-
     authors: { type: new graphql.GraphQLList(author) },
     /* ingredients: { type: new GraphQLList(ingredient) },*/
     language: { type: graphql.GraphQLString },

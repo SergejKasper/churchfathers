@@ -1,5 +1,6 @@
-
+let author = require('./author');
+let work = require('./work')
 module.exports = {
-  author : require('./author'),
-  work : require('./work')
+  author,
+  work
 }

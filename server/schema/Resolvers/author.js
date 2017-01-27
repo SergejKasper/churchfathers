@@ -1,4 +1,5 @@
-var authorDb = require('../../nedb');
+var db = require('../../nedb'),
+authorDb = db.authorDb;
 const Author = {};
 
 Author.find = (args) => {

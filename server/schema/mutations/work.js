@@ -39,7 +39,7 @@ module.exports.work_create = {
       type: graphql.GraphQLBoolean
     }
   },
-  resolve: (_, args) => resolvers.Work.create(args),
+  resolve: (_, args) => resolvers.work.create(args),
 };
 module.exports.work_update = {
   type: types.work,
@@ -79,7 +79,7 @@ module.exports.work_update = {
       type: graphql.GraphQLBoolean
     }
   },
-  resolve: (_, args) => resolvers.Work.update(args),
+  resolve: (_, args) => resolvers.work.update(args),
 };
 module.exports.work_remove = {
   type: types.work,
@@ -89,5 +89,5 @@ module.exports.work_remove = {
       type: graphql.GraphQLString
     },
   },
-  resolve: (_, args) => resolvers.Work.remove(args),
+  resolve: (_, args) => resolvers.work.remove(args),
 };
