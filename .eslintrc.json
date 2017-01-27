@@ -1,0 +1,13 @@
+{
+    "parser": "Babel-ESLint",
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "globalReturn": true,
+            "impliedStrict": true
+        }
+    },
+    "rules": {}
+}

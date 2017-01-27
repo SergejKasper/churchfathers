@@ -22,7 +22,7 @@ const customComponents = [{
 
 class CMS extends React.Component {
   render() {
-    return (<GraphqlCMS endpoint="/graphql_cms_endpoint" graphql="/graphql" newMenuItems={customComponents} />);
+    return (<div><GraphqlCMS endpoint="/graphql_cms_endpoint" graphql="/graphql" newMenuItems={customComponents} /></div>);
   }
 }
 

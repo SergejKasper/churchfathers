@@ -2,6 +2,11 @@ import { injectGlobal } from 'styled-components';
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`
+:root {
+  --color-main: #a2a2a2;
+  --color-main-background-focus: #b0b0b0;
+}
+
   .loading-block {
     min-height: 100px !important;
     margin: 14px !important;
@@ -79,12 +84,14 @@ injectGlobal`
   .graphql-cms #ms-success {
     visibility: hidden;
     opacity: 0;
+    display: none;
     transition: visibility 0.3s, opacity 0.3s linear;
   }
 
   .graphql-cms #ms-error {
     visibility: hidden;
     opacity: 0;
+    display: none;
     transition: visibility 0.3s, opacity 0.3s linear;
   }
 
@@ -119,7 +126,7 @@ injectGlobal`
   }
 
   .graphql-cms .ui.inverted.pointing.menu .active.item::after {
-    background-color: var(--color-main-background-focus) !important;
+    display: none;
   }
 
   .graphql-cms .loading-block {

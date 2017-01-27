@@ -19,6 +19,7 @@ import Form from './Form';
 import Input from './Input';
 import Section from './Section';
 import messages from './messages';
+import Timeline from '../../components/Timeline';
 import { loadRepos } from '../App/actions';
 import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
@@ -51,6 +52,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         />
         <div>
           <CenteredSection>
+            <Timeline id="1TgQNpFFoUUwH8TeCKTjIzMOlVhD1kMEzJPq7KW5gh84" />
             <H2>
               <FormattedMessage {...messages.startProjectHeader} />
             </H2>
