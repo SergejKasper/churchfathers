@@ -11,10 +11,10 @@ module.exports.author_create = {
     name: {
       type: graphql.GraphQLString
     },
-    bornOn: {
+    birthDate: {
       type: graphql.GraphQLString
     },
-    diedAt: {
+    deathDate: {
       type: graphql.GraphQLString
     }
   },
@@ -31,10 +31,10 @@ module.exports.author_update = {
     name: {
       type: graphql.GraphQLString
     },
-    bornOn: {
+    birthDate: {
       type: graphql.GraphQLString
     },
-    diedAt: {
+    deathDate: {
       type: graphql.GraphQLString
     }
   },

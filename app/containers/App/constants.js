@@ -10,3 +10,9 @@
  */
 
 export const DEFAULT_LOCALE = 'en';
+export const LOAD_AUTHORS = 'app/LOAD_AUTHORS';
+export const LOAD_AUTHORS_SUCCESS = 'app/LOAD_AUTHORS_SUCCESS';
+export const LOAD_AUTHORS_ERROR= 'app/LOAD_AUTHORS_ERROR';
+export const LOAD_WORKS = 'app/LOAD_WORKS';
+export const LOAD_WORKS_SUCCESS = 'app/LOAD_WORKS_SUCCESS';
+export const LOAD_WORKS_ERROR= 'app/LOAD_WORKS_ERROR';

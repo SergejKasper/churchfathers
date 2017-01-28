@@ -6,8 +6,8 @@ const author = new graphql.GraphQLObjectType({
   fields: {
     _id: { type: graphql.GraphQLString },
     name: { type: graphql.GraphQLString },
-    createdAt: { type: graphql.GraphQLString },
-    updatedAt: { type: graphql.GraphQLString },
+    birthDate: { type: graphql.GraphQLString },
+    deathDate: { type: graphql.GraphQLString },
   },
 });
 

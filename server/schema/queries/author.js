@@ -11,6 +11,12 @@ module.exports = {
       _id: {
         type: graphql.GraphQLString,
       },
+      birthDate: {
+        type: graphql.GraphQLString
+      },
+      deathDate: {
+        type: graphql.GraphQLString
+      }
     },
     resolve: (_, args) => resolvers.author.find(args),
   }

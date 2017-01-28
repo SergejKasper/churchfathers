@@ -4,6 +4,8 @@ const express = require('express');
 
 const graphQLCMS = require('graphql-auto-generating-cms/lib/middleware').default;
 const schema = require('./schema');
+const cmsConfig = require('./cms_config');
+
 const graphql = require('graphql');
 const expressGraphQL = require('express-graphql');
 const logger = require('./logger');
@@ -19,7 +21,7 @@ const app = express();
 // app.use('/api', myApi);
 
 // Register graphqlCMS
-app.use('/graphql_cms_endpoint', graphQLCMS({ schema: graphql.printSchema(schema) }));
+app.use('/graphql_cms_endpoint', graphQLCMS(cmsConfig));
 // Register graphql
 app.use('/graphql', expressGraphQL(req => ({
   schema,
