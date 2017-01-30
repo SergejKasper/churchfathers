@@ -1,6 +1,7 @@
 var graphql = require('graphql');
 var types = require('../Types');
 var resolvers = require('../Resolvers');
+var fields = require('../fields/work');
 
 module.exports = {
   work_find: {

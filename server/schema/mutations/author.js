@@ -1,43 +1,23 @@
 var graphql = require('graphql');
 var types = require('../Types');
 var resolvers = require('../Resolvers');
+var fields = require('../fields/author');
+var utils = require('../utils');
+
+/*Remove the id for the create schema*/
+delete fields._id;
 
 module.exports = {};
-
 module.exports.author_create = {
   type: types.author,
   description: 'add new author',
-  args: {
-    name: {
-      type: graphql.GraphQLString
-    },
-    birthDate: {
-      type: graphql.GraphQLString
-    },
-    deathDate: {
-      type: graphql.GraphQLString
-    }
-  },
+  args: utils.transformFieldsForMutation(fields, true, ['category']),
   resolve: (_, args) => resolvers.author.create(args),
-}
-
+};
 module.exports.author_update = {
   type: types.author,
   description: 'update author',
-  args: {
-    _id: {
-      type: graphql.GraphQLString
-    },
-    name: {
-      type: graphql.GraphQLString
-    },
-    birthDate: {
-      type: graphql.GraphQLString
-    },
-    deathDate: {
-      type: graphql.GraphQLString
-    }
-  },
+  args: utils.transformFieldsForMutation(fields, false, ['category']),
   resolve: (_, args) => resolvers.author.update(args),
 };
 module.exports.author_remove = {

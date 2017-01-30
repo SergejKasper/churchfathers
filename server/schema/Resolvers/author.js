@@ -18,12 +18,16 @@ Author.find = (args) => {
   });
 };
 
-Author.create = args => new Promise((resolve, reject) => {
+Author.create = args => {
+  args.category = JSON.parse(args.category);
+  new Promise((resolve, reject) => {
   authorDb.insert(args, (err, newDoc) => err ? reject(err) : resolve(newDoc));
-});
+  });
+}
 
 Author.update = (args) => {
   const query = { _id: args._id };
+  args.category = JSON.parse(args.category);
   delete args._id;
 
   return new Promise((resolve, reject) => {

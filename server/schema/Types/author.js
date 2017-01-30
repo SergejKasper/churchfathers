@@ -1,14 +1,9 @@
 var graphql = require('graphql');
+var fields = require('../fields/author');
 
 const author = new graphql.GraphQLObjectType({
   name: 'author',
   description: 'Author schema',
-  fields: {
-    _id: { type: graphql.GraphQLString },
-    name: { type: graphql.GraphQLString },
-    birthDate: { type: graphql.GraphQLString },
-    deathDate: { type: graphql.GraphQLString },
-  },
+  fields: fields,
 });
-
 module.exports = author;
