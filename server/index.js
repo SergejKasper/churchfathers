@@ -5,6 +5,7 @@ const express = require('express');
 const graphQLCMS = require('graphql-auto-generating-cms/lib/middleware').default;
 const schema = require('./schema');
 const cmsConfig = require('./cms_config');
+const path = require('path');
 
 const graphql = require('graphql');
 const expressGraphQL = require('express-graphql');
@@ -34,6 +35,8 @@ app.use('/graphql', expressGraphQL(req => ({
     stack: error.stack
   })
 })));
+
+app.use('/', express.static(path.join(__dirname, '../images')))
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

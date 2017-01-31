@@ -4,6 +4,7 @@ const path = require('path');
 
 module.exports = {
   schema: printSchema(schema),
+  uploadRoot: path.resolve(__dirname, '../images'),
   rules: {
     author: {
       fields: {
@@ -14,7 +15,10 @@ module.exports = {
         deathDate: {
           label: 'Date of Death',
           inputType: 'date',
-        }
+        },
+        image: {
+	         inputType: 'file',
+	      }
       },
     },
     work: {

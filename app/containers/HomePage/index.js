@@ -30,6 +30,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           events={this.props.authors}
           startDateType={'birthDate'}
           endDateType={'deathDate'}
+          type={"author"}
           headline={'Church Fathers'}
           text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
         {JSON.stringify(this.props.authors)}

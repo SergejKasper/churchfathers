@@ -12,7 +12,7 @@ export function* defaultSaga() {
 }
 
 export function* getAuthors(){
-  const requestURL = `http://localhost:3000/graphql?query={author_find{_id,name,birthDate,deathDate}}`;
+  const requestURL = `http://localhost:3000/graphql?query={author_find{_id,name,description,image,birthDate,deathDate}}`;
   try {
     // Call our request helper (see 'utils/request')
     const result = yield call(request, requestURL);

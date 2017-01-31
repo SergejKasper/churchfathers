@@ -20,6 +20,7 @@ Author.find = (args) => {
 
 Author.create = args => {
   args.category = JSON.parse(args.category);
+  args.info_de = JSON.parse(args.info_de);
   new Promise((resolve, reject) => {
   authorDb.insert(args, (err, newDoc) => err ? reject(err) : resolve(newDoc));
   });
@@ -28,6 +29,7 @@ Author.create = args => {
 Author.update = (args) => {
   const query = { _id: args._id };
   args.category = JSON.parse(args.category);
+  args.info_de = JSON.parse(args.info_de);
   delete args._id;
 
   return new Promise((resolve, reject) => {

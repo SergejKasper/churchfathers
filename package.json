@@ -220,7 +220,7 @@
     "express-graphql": "^0.6.2",
     "fontfaceobserver": "2.0.7",
     "graphql": "^0.9.0",
-    "graphql-auto-generating-cms": "^2.2.7",
+    "graphql-auto-generating-cms": "git+https://github.com/SergejKasper/graphql-auto-generating-cms.git",
     "immutable": "3.8.1",
     "intl": "1.2.5",
     "invariant": "2.2.2",

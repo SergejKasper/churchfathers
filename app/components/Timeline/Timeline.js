@@ -47,11 +47,15 @@ class Timeline extends React.PureComponent {
         },
         'media' : {
           'url': `https://en.wikipedia.org/wiki/${event.name}`,
-          'thumb': `https://en.wikipedia.org/wiki/File:${event.name}.jpg`
         },
         'text': {
           'headline': `${event.name}`,
-          'text': 'Samuel Langhorne Clemens (November 30, 1835 \u2013 April 21, 1910), better known by his pen name Mark Twain, was an American author and humorist. He wrote The Adventures of Tom Sawyer (1876) and its sequel, Adventures of Huckleberry Finn (1885), the later often called \"the Great American Novel.\"'
+          'text': event.description || ''
+        },
+        'background' : {
+          "color": "#000000",
+          "opacity": 50,
+          "url": `${this.props.type}/${event.image}`
         },
         'type': 'overview'
       }
@@ -68,7 +72,6 @@ class Timeline extends React.PureComponent {
     });
   }
   componentDidUpdate(prevProps, prevState) {
-    debugger;
     this.updateTimeline();
   }
   handleScriptLoad() {
