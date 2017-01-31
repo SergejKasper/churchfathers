@@ -16,10 +16,6 @@ import Timeline from '../../components/Timeline'
 import { loadAuthors } from '../App/actions';
 
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  componentDidMount(){
-    this.props.fetchAuthors();
-  }
-
   render() {
     return (
       <div>
@@ -29,7 +25,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
             { name: 'description', content: 'Description of HomePage' },
           ]}
         />
-      <button onClick={this.props.fetchAuthors}>Fetch Authors</button>
+      <button onClick={this.props.onButtonClick}>Fetch Authors</button>
       <Timeline
           events={this.props.authors}
           startDateType={'birthDate'}
@@ -56,7 +52,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    fetchAuthors: (evt) => {
+    onButtonClick: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadAuthors());
     }
