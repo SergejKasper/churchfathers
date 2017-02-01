@@ -4,21 +4,26 @@ var resolvers = require('../Resolvers');
 var fields = require('../fields/author');
 var utils = require('../utils');
 
-/*Remove the id for the create schema*/
-delete fields._id;
+fields = utils.transformFieldsForMutation(fields);
 
-module.exports = {};
+module.exports = {}
 module.exports.author_create = {
   type: types.author,
   description: 'add new author',
-  args: utils.transformFieldsForMutation(fields, false),
+  args: Object.assign(fields),
   resolve: (_, args) => resolvers.author.create(args),
 };
 module.exports.author_update = {
   type: types.author,
   description: 'update author',
-  args: utils.transformFieldsForMutation(fields, true),
-  resolve: (_, args) => resolvers.author.update(args),
+  args: Object.assign({
+    _id: {
+      type: graphql.GraphQLString
+    }
+  }, fields),
+  resolve: (_, args) => {
+    resolvers.author.update(args)
+  }
 };
 module.exports.author_remove = {
   type: types.author,
@@ -28,5 +33,5 @@ module.exports.author_remove = {
       type: graphql.GraphQLString
     },
   },
-  resolve: (_, args) => resolvers.author.remove(args),
+  resolve: (_, args) => resolvers.author.remove(args)
 };

@@ -25,5 +25,4 @@ author.category = { type: new graphql.GraphQLList(category) };
   }) }
 });
 
-
 module.exports = author;

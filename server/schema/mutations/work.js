@@ -4,19 +4,22 @@ var resolvers = require('../Resolvers');
 var fields = require('../fields/author');
 var utils = require('../utils');
 
-delete fields._id;
+
+fields = utils.transformFieldsForMutation(fields);
 
 module.exports = {}
 module.exports.work_create = {
   type: types.work,
   description: 'add new work',
-  args: utils.transformFieldsForMutation(fields, true, []),
+  args: Object.assign(fields),
   resolve: (_, args) => resolvers.work.create(args),
 };
 module.exports.work_update = {
   type: types.work,
   description: 'update work',
-  args: utils.transformFieldsForMutation(fields, false, []),
+  args: Object.assign({_id: {
+    type: graphql.GraphQLString
+  }}, fields),
   resolve: (_, args) => resolvers.work.update(args),
 };
 module.exports.work_remove = {
