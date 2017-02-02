@@ -5,9 +5,6 @@
 */
 
 import React, { PropTypes } from 'react';
-import GraphqlCMS from 'graphql-auto-generating-cms/lib';
-import 'semantic-ui-css/semantic.css';
-import './global-styles';
 // import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';

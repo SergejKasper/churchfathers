@@ -12,6 +12,8 @@
  */
 
 import React from 'react';
+import 'semantic-ui-css/semantic.css';
+import './global-styles';
 
 export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
