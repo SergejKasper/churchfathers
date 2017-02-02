@@ -15,11 +15,13 @@ import "!style-loader!css-loader!./font_global_styles.css";
 //import s from './Timeline.css';
 
 class Timeline extends React.PureComponent {
+  static timeline = "";
   static propTypes = {
     events: React.PropTypes.oneOfType([
       React.PropTypes.array.isRequired,
       React.PropTypes.bool.isRequired,
     ]),
+    listeners: PropTypes.object,
     startDateType: PropTypes.string.isRequired,
     endDateType: PropTypes.string.isRequired,
     headline: PropTypes.string.isRequired,
@@ -28,14 +30,13 @@ class Timeline extends React.PureComponent {
   getTitle() {
     return {
       'text' : {
-        'headline': this.props.headline,
-        'text': this.props.text
+        'headline': this.props.headline || "",
+        'text': this.props.text || ""
       }
     }
   }
-  getEvents() {
-    let events = (this.props.events) ? this.props.events : [{birthDate: "0", deathDate: "1"}];
-    return events.map((event) => {
+  configureEvents(){
+    return this.props.events.map((event) => {
       return {
         'start_date': {
           'year': (new Date(event[this.props.startDateType])).getFullYear(),
@@ -57,31 +58,40 @@ class Timeline extends React.PureComponent {
           "opacity": 50,
           "url": `${this.props.type}/${event.image}`
         },
-        'type': 'overview'
+        'type': 'overview',
+        'unique_id': event._id
       }
     })
   }
-  updateTimeline() {
-    this.timeline = new window.TL.Timeline('timeline-embed', {
+  getEvents() {
+    return (this.props.events) ? this.configureEvents() : [];
+  }
+  getConfig(){
+    return {
       'title': this.getTitle(),
       'events': this.getEvents()
-    }, {
-      // ga_property_id: 'UA-27829802-4',
-      debug: true,
-      is_embed: true
-    });
+    };
+  }
+  updateTimeline() {
+    debugger;
+    this.timeline.setConfig(new TL.TimelineConfig(this.getConfig()));
   }
   componentDidUpdate(prevProps, prevState) {
-    this.updateTimeline();
+    if(this.timeline && prevProps.events !== this.props.events) this.updateTimeline();
   }
   handleScriptLoad() {
-    this.updateTimeline()
+    this.timeline = window.cf_timeline = new window.TL.Timeline('timeline-embed', this.getConfig(), {
+        // ga_property_id: 'UA-27829802-4',
+        debug: true,
+        is_embed: true
+    });
+    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
+      this.timeline.on(key, this.props.listeners[key].bind(this))
+    });
   }
   handleScriptError(e) {
     console.error(e);
   }
-
-  componentDidMount() {}
   render() {
     return (
       <div>
