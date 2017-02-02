@@ -36,7 +36,7 @@ app.use('/graphql', expressGraphQL(req => ({
   })
 })));
 
-app.use('/', express.static(path.join(__dirname, '../images')))
+app.use('/', express.static(path.join(__dirname, '../assets')))
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

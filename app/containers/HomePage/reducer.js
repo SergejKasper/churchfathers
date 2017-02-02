@@ -9,7 +9,7 @@ import {
   TIMELINE_FILTER_CHANGE,
 } from './constants';
 
-const initialState = fromJS({blub: "blar"});
+const initialState = fromJS({});
 
 function homePageReducer(state = initialState, action) {
   switch (action.type) {

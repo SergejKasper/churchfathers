@@ -37,6 +37,41 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
+      childRoutes: [{
+        path: 'authors/:author_name',
+        name: 'authorsView',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            import('containers/AuthorsView/reducer'),
+            import('containers/AuthorsView')
+          ]);
+          const renderRoute = loadModule(cb);
+          importModules.then(([reducer, component]) => {
+            injectReducer('authorsView', reducer.default);
+            renderRoute(component);
+          });
+          importModules.catch(errorLoading);
+        }
+      }, {
+        path: 'works',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            import('containers/HomePage/reducer'),
+            import('containers/HomePage/sagas'),
+            import('containers/HomePage'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([reducer, sagas, component]) => {
+            injectReducer('homePage', reducer.default);
+            injectSagas(sagas.default);
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
+        }
+      }]
     }, {
       path: '/cms',
       name: 'cmsPage',

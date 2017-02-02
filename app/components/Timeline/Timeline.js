@@ -56,7 +56,7 @@ class Timeline extends React.PureComponent {
         'background' : {
           "color": "#000000",
           "opacity": 50,
-          "url": `${this.props.type}/${event.image}`
+          "url": `/images/${this.props.type}/${event.image}`
         },
         'type': 'overview',
         'unique_id': event._id

@@ -14,7 +14,7 @@ const makeSelectError = () => createSelector(
 );
 
 const makeSelectAuthors = () => createSelector(
-  selectGlobal,
+  [selectGlobal],
   (globalState) => globalState.getIn(['cmsData', 'authors'])
 );
 

@@ -4,9 +4,10 @@ const path = require('path');
 
 module.exports = {
   schema: printSchema(schema),
-  uploadRoot: path.resolve(__dirname, '../images'),
+  uploadRoot: path.resolve(__dirname, '../assets/images'),
   rules: {
     author: {
+      uploadPath: 'author',
       fields: {
         birthDate: {
           label: 'Date of Birth',
