@@ -25,7 +25,8 @@ class Timeline extends React.PureComponent {
     startDateType: PropTypes.string.isRequired,
     endDateType: PropTypes.string.isRequired,
     headline: PropTypes.string.isRequired,
-    text: PropTypes.string
+    text: PropTypes.string,
+    onUpdate: PropTypes.func
   };
   getTitle() {
     return {
@@ -59,7 +60,7 @@ class Timeline extends React.PureComponent {
           "url": `/images/${this.props.type}/${event.image}`
         },
         'type': 'overview',
-        'unique_id': event._id
+        'unique_id': event.name
       }
     })
   }
@@ -73,11 +74,12 @@ class Timeline extends React.PureComponent {
     };
   }
   updateTimeline() {
-    debugger;
     this.timeline.setConfig(new TL.TimelineConfig(this.getConfig()));
   }
   componentDidUpdate(prevProps, prevState) {
-    if(this.timeline && prevProps.events !== this.props.events) this.updateTimeline();
+    if(this.timeline && prevProps.events !== this.props.events) {
+      this.updateTimeline();
+    }
   }
   handleScriptLoad() {
     this.timeline = window.cf_timeline = new window.TL.Timeline('timeline-embed', this.getConfig(), {
@@ -88,6 +90,7 @@ class Timeline extends React.PureComponent {
     if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
       this.timeline.on(key, this.props.listeners[key].bind(this))
     });
+    this.timeline.on("loaded", this.props.onUpdate(this.timeline))
   }
   handleScriptError(e) {
     console.error(e);

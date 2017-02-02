@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {makeSelectAuthors} from '../app/selectors'
+import {makeSelectAuthors} from '../App/selectors'
 
 const selectAuthorsView = (state) => state.get('authorsView');
 
@@ -8,7 +8,7 @@ const makeSelectCurrentAuthor = () => createSelector(
   makeSelectAuthors(),
   (authorsViewState, selectAuthors) => {
     if(!selectAuthors) return "";
-    return selectAuthors.filter((author) => authorsViewState.get('currentAuthorId') === author._id);
+    return selectAuthors.filter((author) => authorsViewState.get('currentAuthorId') === author.name);
   }
 );
 

@@ -12,10 +12,29 @@ import {makeSelectCurrentAuthor} from './selectors';
 
 export class AuthorsView extends React.PureComponent {
   onTimelineChange(event){
-   this.props.selectAuthor(event.unique_id);
+    debugger;
+   if(event.unique_id) {
+     console.log(event.unique_id)
+     this.props.selectAuthor(event.unique_id);
+     this.props.changeLink(this.props.currentAuthor[0].name.split(" ").join("-"));
+   }
+  }
+  onTimelineLoaded(timeline){
+    if(this.props.route) {
+      setTimeout(()=> {
+        let linkPathAuthorName = this.props.params.author_name.split("-").join(" ");
+        this.props.selectAuthor(linkPathAuthorName)
+        timeline.goToId(linkPathAuthorName)
+      }, 2000);
+    }
+  }
+  componentDidMount(){
+    //this.props.changeLink(. this.props.currentAuthor[0].name)
   }
   getCurrentAuthor(){
-    return this.props.currentAuthorId;
+    return this.props.currentAuthor;
+    //if(!this.props.authors || !this.props.authorId) return {};
+    //return this.props.authors.filter(a => a._id === this.state.get('currentAuthorId'));
   }
   render(){
     return (<div>
@@ -24,7 +43,7 @@ export class AuthorsView extends React.PureComponent {
                 content: 'Description of HomePage'
               }
             ]}/>
-            <Timeline events={this.props.authors} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
+          <Timeline events={this.props.authors} onUpdate={this.onTimelineLoaded.bind(this)} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
             {<RevealList content={this.getCurrentAuthor()} /> || <div>list all</div>}
             {/*<FormattedMessage {...messages.header}/>*/}
     </div>)
@@ -33,12 +52,12 @@ export class AuthorsView extends React.PureComponent {
 
 AuthorsView.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  currentAuthorId: PropTypes.any
+  currentAuthor: PropTypes.any
 };
 
 const mapStateToProps = createStructuredSelector({
   authors: makeSelectAuthors(),
-  currentAuthorId: makeSelectCurrentAuthor()
+  currentAuthor: makeSelectCurrentAuthor()
 });
 function mapDispatchToProps(dispatch) {
   return {
@@ -46,6 +65,9 @@ function mapDispatchToProps(dispatch) {
     selectAuthor: (evt) => {
         dispatch(setCurrentAuthor(evt));
     },
+    changeLink: (a)=>{
+      dispatch(push('/authors/' + a));
+    }
   };
 }
 
