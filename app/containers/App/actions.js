@@ -9,9 +9,9 @@ import {
  *
  * @return {object} An action object with a type of LOAD_AUTHORS
  */
-export function loadAuthors() {
+export function loadAuthors(language) {
   return {
-    type: LOAD_AUTHORS,
+    type: LOAD_AUTHORS, language
   };
 }
 

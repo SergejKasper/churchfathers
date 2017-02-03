@@ -6,30 +6,39 @@ import {push } from 'react-router-redux'
 import Timeline from '../../components/Timeline';
 import RevealList from '../../components/RevealList';
 import {loadAuthors} from '../App/actions';
+import {makeSelectLocale} from '../../containers/LanguageProvider/selectors';
 import {setCurrentAuthor} from './actions';
 import {makeSelectAuthors, makeSelectLoading, makeSelectError} from 'containers/App/selectors';
 import {makeSelectCurrentAuthor} from './selectors';
 
 
 export class AuthorsView extends React.PureComponent {
-  componentDidMount() {
-    if(!this.props.authors) this.props.fetchAuthors();
+  constructor(){
+    super()
+  }
+  componentWillMount() {
+      this.props.fetchAuthors(this.props.locale);
+      if(this.props.params.author_name) {
+          let linkPathAuthorName = this.props.params.author_name.split("-").join(" ");
+          this.props.selectAuthor(linkPathAuthorName)
+      }
+  }
+  selectAndSetLink(author){
+    this.props.selectAuthor(author);
+    if(this.props.currentAuthor) this.props.changeLink(this.props.currentAuthor.name.split(" ").join("-"));
   }
   onTimelineChange(event){
    if(event.unique_id) {
-     debugger;
      console.log(event.unique_id)
-     this.props.selectAuthor(event.unique_id);
-     if(this.props.currentAuthor) this.props.changeLink(this.props.currentAuthor.name.split(" ").join("-"));
+     this.selectAndSetLink(event.unique_id)
    }
   }
   onTimelineLoaded(timeline){
-    if(this.props.params.author_name) {
-        debugger;
-        let linkPathAuthorName = this.props.params.author_name.split("-").join(" ");
-        this.props.selectAuthor(linkPathAuthorName)
-        timeline.goToId(linkPathAuthorName)
-    }
+    this.timeline = timeline;
+  }
+  getCurrentSlide(){
+    //go to the current slide id (name of author) or to the first slide (-1)
+    return (this.props.currentAuthor) ? this.props.currentAuthor.name : "";
   }
   render(){
     return (<div>
@@ -38,7 +47,7 @@ export class AuthorsView extends React.PureComponent {
                 content: 'Description of HomePage'
               }
             ]}/>
-            {(this.props.authors) ? <Timeline events={this.props.authors} onUpdate={this.onTimelineLoaded.bind(this)} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/> : null}
+          {(this.props.authors) ? <Timeline currentSlide={this.getCurrentSlide()} lang={this.props.locale} events={this.props.authors} onUpdate={this.onTimelineLoaded.bind(this)} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/> : null}
             {<RevealList content={this.props.currentAuthor || {}} /> || <div>list all</div>}
             {/*<FormattedMessage {...messages.header}/>*/}
     </div>)
@@ -52,6 +61,7 @@ AuthorsView.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   authors: makeSelectAuthors(),
+  locale: makeSelectLocale(),
   currentAuthor: makeSelectCurrentAuthor()
 });
 function mapDispatchToProps(dispatch) {
@@ -64,9 +74,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(push('/authors/' + a));
     },
     fetchAuthors: (evt) => {
-      if (evt !== undefined && evt.preventDefault)
-        evt.preventDefault();
-      dispatch(loadAuthors());
+      dispatch(loadAuthors(evt));
     }
   };
 }

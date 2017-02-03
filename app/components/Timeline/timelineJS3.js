@@ -9127,6 +9127,7 @@ TL.Media.Wikipedia = TL.Media.extend({
 		// Get Media ID
 		this.media_id	 = this.data.url.split("wiki\/")[1].split("#")[0].replace("_", " ");
 		this.media_id	 = this.media_id.replace(" ", "%20");
+
 		api_language	 = this.data.url.split("//")[1].split(".wikipedia")[0];
 
 		// API URL
