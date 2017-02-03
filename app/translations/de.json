@@ -1,4 +1,4 @@
 {
-  "app.components.HomePage.header": "",
-  "app.components.NotFoundPage.header": ""
+  "app.components.Header.title": "Chronologie Geschichte und Väter",
+  "app.components.NotFoundPage.header": "Das gab es damals nicht!"
 }

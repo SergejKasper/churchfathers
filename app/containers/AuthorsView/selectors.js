@@ -7,8 +7,9 @@ const makeSelectCurrentAuthor = () => createSelector(
   selectAuthorsView,
   makeSelectAuthors(),
   (authorsViewState, selectAuthors) => {
-    if(!selectAuthors) return "";
-    return selectAuthors.filter((author) => authorsViewState.get('currentAuthorId') === author.name);
+    if(!selectAuthors) return null;
+    let result = selectAuthors.filter((author) => authorsViewState.get('currentAuthorId') === author.name);
+    return (result.length !== -1) ? result[0]: null;
   }
 );
 

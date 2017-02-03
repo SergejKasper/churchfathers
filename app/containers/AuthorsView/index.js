@@ -5,36 +5,31 @@ import {createStructuredSelector} from 'reselect';
 import {push } from 'react-router-redux'
 import Timeline from '../../components/Timeline';
 import RevealList from '../../components/RevealList';
+import {loadAuthors} from '../App/actions';
 import {setCurrentAuthor} from './actions';
 import {makeSelectAuthors, makeSelectLoading, makeSelectError} from 'containers/App/selectors';
 import {makeSelectCurrentAuthor} from './selectors';
 
 
 export class AuthorsView extends React.PureComponent {
+  componentDidMount() {
+    if(!this.props.authors) this.props.fetchAuthors();
+  }
   onTimelineChange(event){
-    debugger;
    if(event.unique_id) {
+     debugger;
      console.log(event.unique_id)
      this.props.selectAuthor(event.unique_id);
-     this.props.changeLink(this.props.currentAuthor[0].name.split(" ").join("-"));
+     if(this.props.currentAuthor) this.props.changeLink(this.props.currentAuthor.name.split(" ").join("-"));
    }
   }
   onTimelineLoaded(timeline){
-    if(this.props.route) {
-      setTimeout(()=> {
+    if(this.props.params.author_name) {
+        debugger;
         let linkPathAuthorName = this.props.params.author_name.split("-").join(" ");
         this.props.selectAuthor(linkPathAuthorName)
         timeline.goToId(linkPathAuthorName)
-      }, 2000);
     }
-  }
-  componentDidMount(){
-    //this.props.changeLink(. this.props.currentAuthor[0].name)
-  }
-  getCurrentAuthor(){
-    return this.props.currentAuthor;
-    //if(!this.props.authors || !this.props.authorId) return {};
-    //return this.props.authors.filter(a => a._id === this.state.get('currentAuthorId'));
   }
   render(){
     return (<div>
@@ -43,8 +38,8 @@ export class AuthorsView extends React.PureComponent {
                 content: 'Description of HomePage'
               }
             ]}/>
-          <Timeline events={this.props.authors} onUpdate={this.onTimelineLoaded.bind(this)} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
-            {<RevealList content={this.getCurrentAuthor()} /> || <div>list all</div>}
+            {(this.props.authors) ? <Timeline events={this.props.authors} onUpdate={this.onTimelineLoaded.bind(this)} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/> : null}
+            {<RevealList content={this.props.currentAuthor || {}} /> || <div>list all</div>}
             {/*<FormattedMessage {...messages.header}/>*/}
     </div>)
   }
@@ -67,6 +62,11 @@ function mapDispatchToProps(dispatch) {
     },
     changeLink: (a)=>{
       dispatch(push('/authors/' + a));
+    },
+    fetchAuthors: (evt) => {
+      if (evt !== undefined && evt.preventDefault)
+        evt.preventDefault();
+      dispatch(loadAuthors());
     }
   };
 }

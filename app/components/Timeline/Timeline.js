@@ -11,6 +11,7 @@ import React, {PropTypes} from 'react';
 import Script from 'react-load-script';
 import "!style-loader!css-loader!./global_styles.css";
 import "!style-loader!css-loader!./font_global_styles.css";
+import "imports-loader?this=>window!./timelineJS3"
 //import withStyles from 'isomorphic-style-loader/lib/withStyles';
 //import s from './Timeline.css';
 
@@ -26,7 +27,8 @@ class Timeline extends React.PureComponent {
     endDateType: PropTypes.string.isRequired,
     headline: PropTypes.string.isRequired,
     text: PropTypes.string,
-    onUpdate: PropTypes.func
+    onUpdate: PropTypes.func,
+    lang: PropTypes.string
   };
   getTitle() {
     return {
@@ -37,6 +39,7 @@ class Timeline extends React.PureComponent {
     }
   }
   configureEvents(){
+    debugger;
     return this.props.events.map((event) => {
       return {
         'start_date': {
@@ -76,21 +79,29 @@ class Timeline extends React.PureComponent {
   updateTimeline() {
     this.timeline.setConfig(new TL.TimelineConfig(this.getConfig()));
   }
+  componentDidMount(){
+    debugger;
+    this.timeline = window.cf_timeline = new window.TL.Timeline('timeline-react', this.getConfig(), {
+        // ga_property_id: 'UA-27829802-4',
+        debug: true,
+        'language': "en"
+    });
+    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
+      this.timeline.on(key, this.props.listeners[key].bind(this))
+    });
+    this.props.onUpdate(this.timeline);
+  }
   componentDidUpdate(prevProps, prevState) {
     if(this.timeline && prevProps.events !== this.props.events) {
       this.updateTimeline();
     }
   }
+  componentWillUnmount(){
+    //this.timeline.off("loaded")
+    //this.timeline.off("change")
+  }
   handleScriptLoad() {
-    this.timeline = window.cf_timeline = new window.TL.Timeline('timeline-embed', this.getConfig(), {
-        // ga_property_id: 'UA-27829802-4',
-        debug: true,
-        is_embed: true
-    });
-    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
-      this.timeline.on(key, this.props.listeners[key].bind(this))
-    });
-    this.timeline.on("loaded", this.props.onUpdate(this.timeline))
+
   }
   handleScriptError(e) {
     console.error(e);
@@ -100,7 +111,7 @@ class Timeline extends React.PureComponent {
       <div>
         <Script url="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js" onLoad={this.handleScriptLoad.bind(this)} onError={this.handleScriptError.bind(this)}/>
         <div>
-          <div id='timeline-embed' style={{
+          <div id='timeline-react' style={{
             width: '100%',
             height: '600px'
           }}/>

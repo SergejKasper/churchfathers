@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import { Dimmer, Loader, Image, Segment, Reveal } from 'semantic-ui-react'
+import { Dimmer, Loader, Image, Segment, Reveal, Header, Divider } from 'semantic-ui-react'
 
 /*<Reveal animated='small fade'>
   <Reveal.Content visible>
@@ -15,11 +15,13 @@ import { Dimmer, Loader, Image, Segment, Reveal } from 'semantic-ui-react'
 const RevealList = (content) => (
   <div>
         <Segment>
-          {JSON.stringify(content)}
+          <Header as="h2">{content.content.name}</Header>
+          <Divider />
+          <p>{content.content.description}</p>
         </Segment>
   </div>
 );
 RevealList.propTypes = {
-  content: PropTypes.any.isRequired
+  content: PropTypes.any
 };
 export default RevealList

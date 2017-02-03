@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Menu, Segment } from 'semantic-ui-react'
+import {FormattedMessage} from 'react-intl'
+import LanguageSwitch from '../LanguageSwitch'
+import messages from './messages'
 
 export default class MenuExampleSecondaryPointing extends Component {
   state = { activeItem: 'home' }
@@ -12,17 +15,15 @@ export default class MenuExampleSecondaryPointing extends Component {
     return (
       <div>
         <Menu pointing secondary>
-          <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick} />
-          <Menu.Item name='messages' active={activeItem === 'messages'} onClick={this.handleItemClick} />
-          <Menu.Item name='friends' active={activeItem === 'friends'} onClick={this.handleItemClick} />
+          <FormattedMessage {...messages.header}/>
+          <Menu.Item name='authors' active={activeItem === 'authors'} onClick={this.handleItemClick}>Writings</Menu.Item>
+          <Menu.Item name='writings' active={activeItem === 'writings'} onClick={this.handleItemClick} />
+          <Menu.Item name='events' active={activeItem === 'events'} onClick={this.handleItemClick} />
           <Menu.Menu position='right'>
-            <Menu.Item name='logout' active={activeItem === 'logout'} onClick={this.handleItemClick} />
+            {/*<Menu.Item name='logout' active={activeItem === 'logout'} onClick={this.handleItemClick} />*/}
+                <LanguageSwitch/>
           </Menu.Menu>
         </Menu>
-
-        <Segment>
-          <img src='http://semantic-ui.com/images/wireframe/media-paragraph.png' />
-        </Segment>
       </div>
     )
   }

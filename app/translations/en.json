@@ -1,4 +1,4 @@
 {
-  "app.components.HomePage.header": "This is HomePage component!",
-  "app.components.NotFoundPage.header": "This is NotFoundPage component!"
+  "app.components.Header.title": "This is HomePage component!",
+  "app.components.NotFoundPage.header": "Chronology, History and Fathers!"
 }
