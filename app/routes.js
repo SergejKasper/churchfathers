@@ -56,7 +56,7 @@ export default function createRoutes(store) {
         });
         importModules.catch(errorLoading);
       }
-    }, {
+    },{
       path: 'works',
       getComponent(nextState, cb) {
         const importModules = Promise.all([

@@ -11,6 +11,7 @@ import React, {PropTypes} from 'react';
 import "!style-loader!css-loader!./global_styles.css";
 import "!style-loader!css-loader!./font_global_styles.css";
 import "imports-loader?this=>window!./timelineJS3"
+import {DEFAULT_LOCALE} from 'containers/App/constants'
 //import withStyles from 'isomorphic-style-loader/lib/withStyles';
 //import s from './Timeline.css';
 
@@ -26,7 +27,6 @@ class Timeline extends React.PureComponent {
     endDateType: PropTypes.string.isRequired,
     headline: PropTypes.string.isRequired,
     text: PropTypes.string,
-    onUpdate: PropTypes.func,
     lang: PropTypes.string,
     currentSlide: PropTypes.string
   };
@@ -50,7 +50,7 @@ class Timeline extends React.PureComponent {
           'format': ''
         },
         'media' : {
-          'url': `https://${this.props.lang || 'en'}.wikipedia.org/wiki/${event.name}`,
+          'url': `https://${this.props.lang || DEFAULT_LOCALE}.wikipedia.org/wiki/${event.name}`,
         },
         'text': {
           'headline': `${event.name}`,
@@ -75,13 +75,18 @@ class Timeline extends React.PureComponent {
       'events': this.getEvents()
     };
   }
-  componentDidUpdate(prevProps, prevState) {
-    if(this.timeline && prevProps.currentSlide !== this.props.currentSlide) {
-      this.timeline.goToId(this.props.currentSlide)
+  componentWillReceiveProps(nextProps){
+      //this.timeline.setConfig(nextProps.currentSlide)
+    if(this.timeline && nextProps.currentSlide) {
+      this.timeline.goToId(nextProps.currentSlide)
     }
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
   componentDidMount(){
-    this.timeline = new window.TL.Timeline('timeline-react', this.getConfig(), {
+    debugger;
+    this.timeline = window.timeline =  new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
         // ga_property_id: 'UA-27829802-4',
         debug: true,
         language: this.props.lang,
@@ -96,10 +101,7 @@ class Timeline extends React.PureComponent {
     return (
       <div>
         <div>
-          <div id='timeline-react' style={{
-            width: '100%',
-            height: '600px'
-          }}/>
+          <div id="timeline" ref="timeline" style={{width: '100%', height: '600px'}}/>
         </div>
       </div>
     );

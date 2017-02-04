@@ -3,6 +3,7 @@ import { shallow, mount } from 'enzyme';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { Provider } from 'react-redux';
 import { browserHistory } from 'react-router';
+import {DEFAULT_LOCALE} from 'containers/App/constants'
 
 import ConnectedLanguageProvider, { LanguageProvider } from '../index';
 import configureStore from '../../../store';
@@ -21,7 +22,7 @@ describe('<LanguageProvider />', () => {
   it('should render its children', () => {
     const children = (<h1>Test</h1>);
     const renderedComponent = shallow(
-      <LanguageProvider messages={messages} locale="en">
+      <LanguageProvider messages={messages} locale={DEFAULT_LOCALE}>
         {children}
       </LanguageProvider>
     );

@@ -21,7 +21,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
             content: 'Description of HomePage'
           }
         ]}/>
-        {this.props.children || <div>list all</div>}
+        {this.props.children}
         {/*<FormattedMessage {...messages.header}/>*/}
       </div>
     );
