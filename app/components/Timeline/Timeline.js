@@ -38,19 +38,19 @@ class Timeline extends React.PureComponent {
       }
     }
   }
-  configureEvents(){
-    return this.props.events.map((event) => {
+  configureEvents(events, type, startDateProp, endDateProp, lang){
+    return events.map((event) => {
       return {
         'start_date': {
-          'year': (new Date(event[this.props.startDateType])).getFullYear(),
+          'year': (new Date(event[startDateProp])).getFullYear(),
           'format': ''
         },
         'end_date': {
-          'year': (new Date(event[this.props.endDateType])).getFullYear(),
+          'year': (new Date(event[endDateProp])).getFullYear(),
           'format': ''
         },
         'media' : {
-          'url': `https://${this.props.lang || DEFAULT_LOCALE}.wikipedia.org/wiki/${event.name}`,
+          'url': `https://${lang}.wikipedia.org/wiki/${event.name}`,
         },
         'text': {
           'headline': `${event.name}`,
@@ -59,7 +59,7 @@ class Timeline extends React.PureComponent {
         'background' : {
           "color": "#000000",
           "opacity": 50,
-          "url": `/images/${this.props.type}/${event.image}`
+          "url": `/images/${type}/${event.image}`
         },
         'type': 'overview',
         'unique_id': event.name
@@ -72,20 +72,65 @@ class Timeline extends React.PureComponent {
   getConfig(){
     return {
       'title': this.getTitle(),
-      'events': this.getEvents()
+      'events': [{
+        'start_date': {
+          year: 0
+        },text: {
+          'headline': 'loading'
+        }
+      }]
     };
   }
-  componentWillReceiveProps(nextProps){
-      //this.timeline.setConfig(nextProps.currentSlide)
-    if(this.timeline && nextProps.currentSlide) {
-      this.timeline.goToId(nextProps.currentSlide)
+
+  pushNewEventsOnRecieveProps(nextProps){
+    let removeLast;
+    let displayableEvents = nextProps.events;
+
+    /* if(this.props.events && this.props.events.length) console.log('called with :' + JSON.stringify(this.props.events.map(e => e.name)) + ' replacing' + JSON.stringify(nextProps.events.map(e => e.name)))
+
+    if(this.props.events && this.props.events.length) nextProps.events.filter(event => (this.props.events.map(e => e.name).indexOf(event.name) === -1));
+    let removeableEvents = [];
+    if(this.props.events && this.props.events.length) removeableEvents = this.props.events.filter(event => {
+      let removeEvent = (nextProps.events.map(e => e.name).indexOf(event.name) === -1)
+      if(removeEvent && event.name === this.timeline.current_id) {
+        removeLast = event;
+        return false;
+      }
+      return removeEvent;
+    });*/
+    try{
+      this.props.events.filter(event => {
+        let removeEvent = (nextProps.events.map(e => e.name).indexOf(event.name) === -1)
+        if(removeEvent && event.name === this.timeline.current_id) {
+          removeLast = event;
+          return false;
+        }
+        this.timeline.removeId(event.name)
+        return removeEvent;
+      });
+    } catch (e){
+
     }
+    if(this.props.events){
+      displayableEvents = nextProps.events.filter(event => (this.props.events.map(e => e.name).indexOf(event.name) === -1));
+    }
+    this.configureEvents(displayableEvents, nextProps.type, nextProps.startDateType, nextProps.endDateType, this.props.lang || DEFAULT_LOCALE).forEach((e, i) => setTimeout(() => {this.timeline.add(e); }, i * 50))  //this.timelineå‚‚.setConfig(nextProps.currentSlide)
+    if(removeLast) this.timeline.removeId(removeLast.name);
+    setTimeout(()=>this.timeline.zoomOut(), 200)
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events){
+      this.pushNewEventsOnRecieveProps(nextProps);
+    }
+    /*if(this.timeline && nextProps.currentSlide) {
+      this.timeline.goToId(nextProps.currentSlide)
+    }*/
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return false;
+    return (nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events);
   }
   componentDidMount(){
-    debugger;
     this.timeline = window.timeline =  new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
         // ga_property_id: 'UA-27829802-4',
         debug: true,

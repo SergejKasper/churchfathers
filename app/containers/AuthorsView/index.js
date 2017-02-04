@@ -13,8 +13,7 @@ import RevealList from '../../components/RevealList';
 
 export class AuthorsView extends React.Component {
   componentWillMount() {
-      debugger;
-     if(!this.props.currentAuthor) this.props.fetchAuthors(this.props.locale);
+     this.props.fetchAuthors(this.props.locale);
   }
   selectAndSetLink(authorName){
     if(this.props.currentAuthor !== authorName) this.props.changeLink(authorName.split(" ").join("-"));
@@ -36,7 +35,7 @@ export class AuthorsView extends React.Component {
                 content: 'Description of HomePage'
               }
             ]}/>
-          {(this.props.authors.length > 0) ? <Timeline currentSlide={this.getCurrentSlide()} lang={this.props.locale} events={this.props.authors} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/> : null}
+          <Timeline currentSlide={this.getCurrentSlide()} lang={this.props.locale} events={this.props.authors} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
           {<RevealList content={this.props.currentAuthor || {}} />}
     </div>)
   }
