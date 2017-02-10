@@ -19,10 +19,14 @@ export class AuthorsViewSingle extends React.PureComponent { // eslint-disable-l
   shouldComonentUpdate(){
     return true;
   }
-  componentWillUpdate(nextProps){
+
+  componentDidMount() {
+     this.props.fetchAuthor(this.props.params.author_name.split("-").join(" "), this.props.locale)
+  }
+
+  componentWillReceiveProps(nextProps){
     if(!nextProps.authors || nextProps.params.author_name === this.props.params.author_name) return;
-    let author = nextProps.authors.filter((a) => a.name === nextProps.params.author_name.split("-").join(" "))[0];
-    if(author) this.props.fetchAuthor(author._id, this.props.locale)
+    this.props.fetchAuthor(nextProps.params.author_name.split("-").join(" "), this.props.locale)
   }
   render(){
     //let linkPathAuthorName = this.props.params.author_name.split("-").join(" ");

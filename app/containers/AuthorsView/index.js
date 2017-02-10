@@ -15,19 +15,13 @@ export class AuthorsView extends React.PureComponent {
          this.props.fetchAuthors(this.props.locale);
   }
   selectAndSetLink(authorName){
-    if(this.props.currentAuthor !== authorName) this.props.changeLink(authorName.split(" ").join("-"));
+    if(authorName !== 'church-fathers' && this.props.currentAuthor !== authorName) this.props.changeLink(authorName.split(" ").join("-"));
   }
-  onTimelineChange(event){
-   if(event.unique_id && event.unique_id !== this.props.currentAuthor) {
-     console.log(event.unique_id)
-     this.selectAndSetLink(event.unique_id)
-   }
-  }
-  getCurrentSlide(){
-    //go to the current slide id (name of author) or to the first slide (-1)
-    return (this.props.currentAuthor) ? this.props.currentAuthor.name : "";
+  onTimelineChange(unique_id){
+     this.selectAndSetLink(unique_id)
   }
   render(){
+    const currentSlide = (this.props.currentAuthor) ? this.props.currentAuthor.name : "";
     return (<div>
             <Helmet title="HomePage" meta={[{
                 name: 'description',
@@ -35,10 +29,10 @@ export class AuthorsView extends React.PureComponent {
               }
             ]}/>
           <Timeline
-            currentSlide={this.getCurrentSlide()}
+            currentSlide={currentSlide}
+            onEventChange={this.onTimelineChange.bind(this)}
             lang={this.props.locale}
             events={this.props.authors}
-            listeners={{'change' : this.onTimelineChange.bind(this)}}
             startDateType={'birthDate'}
             endDateType={'deathDate'}
             type={"author"}

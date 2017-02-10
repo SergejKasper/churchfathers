@@ -2504,6 +2504,7 @@ TL.Events = {
 		}, data);
 
 		var listeners = this._tl_events[type].slice();
+
 		for (var i = 0, len = listeners.length; i < len; i++) {
 			listeners[i].action.call(listeners[i].context || this, event);
 		}

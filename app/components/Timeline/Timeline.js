@@ -28,6 +28,7 @@ class Timeline extends React.PureComponent {
     headline: PropTypes.string.isRequired,
     text: PropTypes.string,
     lang: PropTypes.string,
+    onEventChange: PropTypes.func,
     currentSlide: PropTypes.string
   };
 
@@ -37,26 +38,34 @@ class Timeline extends React.PureComponent {
       this.pushNewEventsOnRecieveProps(nextProps);
     }
     if(this.timeline && nextProps.currentSlide) {
-      this.timeline.goToId(nextProps.currentSlide)
+      setTimeout(()=>{
+        console.log('Slide: ' + nextProps.currentSlide);
+        this.timeline.goToId(nextProps.currentSlide)
+      }, 1200)
     }
   }
 
   componentDidMount(){
-    this.timeline = new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
+    this.timeline = window.timeline = new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
         // ga_property_id: 'UA-27829802-4',
         debug: true,
         language: this.props.lang,
         script_path: ''
+    });
+   ['nav_left','nav_next','nav_previous','nav_right','markerclick'].forEach((key)=>{
+      this.timeline.on(key, () => {this.props.onEventChange.apply(this, [this.timeline.current_id])})
     });
     if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
       this.timeline.on(key, this.props.listeners[key].bind(this))
     });
   }
   componentWillUnmount(){
+    ['nav_left','nav_next','nav_previous','nav_right','markerclick'].forEach((key)=>{
+       this.timeline.off(key, () => {this.props.onEventChange.bind(this)})
+     });
     if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
-      this.timeline.on(key, this.props.listeners[key].bind(this))
+      this.timeline.off(key, () => {this.props.onEventChange.apply(this, [this.timeline.current_id])})
     });
-
   }
 
   render() {
@@ -127,12 +136,13 @@ class Timeline extends React.PureComponent {
     let displayableEvents;
     if(!nextProps.events) return;
     let onAddEvents = () => {
-      this.timeline.goToId(this.props.currentSlide)
       this.timeline._tl_events.added = []
-      debugger;
       if(this.timeline.getSlideById('loading')) this.timeline.removeId('loading');
-      this.timeline.setZoom(0)
-      setTimeout(()=>this.timeline.setZoom(89), 400)
+      this.timeline.setZoom(5)
+      setTimeout(()=>{
+        console.log('Slide: ' + nextProps.currentSlide);
+        this.timeline.setZoom(1)
+      }, 400)
     }
     if(!this.props.events){
       displayableEvents = nextProps.events;

@@ -16,6 +16,9 @@ module.exports = {
       _id: {
         type: graphql.GraphQLString,
       },
+      name: {
+        type: graphql.GraphQLString,
+      }
     },
     resolve: (_, args) => resolvers.author.find(args),
   }

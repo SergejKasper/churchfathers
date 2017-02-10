@@ -3,10 +3,20 @@ authorDb = db.authorDb;
 const Author = {};
 
 Author.find = (args) => {
-  const query = args._id ? { _id: args._id } : {};
+  const query = {};;
+  switch (args) {
+    case args._id:
+      query = { _id: args._id } ;
+      break;
+    case args.name:
+      query = { _id: args.name } ;
+      break;
+    default:
+      break;
+  }
 
   return new Promise((resolve, reject) => {
-    if (args._id) {
+    if (args._id || args.name) {
       authorDb.find(query)
       .exec((err, res) => err ? reject(err) : resolve(res));
     } else {
