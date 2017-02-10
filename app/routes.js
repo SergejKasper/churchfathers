@@ -42,7 +42,7 @@ export default function createRoutes(store) {
       importModules.catch(errorLoading);
     },
     childRoutes: [{
-      path: 'authors(/:author_name)',
+      path: 'authors',
       name: 'authorsView',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -55,7 +55,25 @@ export default function createRoutes(store) {
           renderRoute(component);
         });
         importModules.catch(errorLoading);
-      }
+      },
+      childRoutes: [{
+        path: ':author_name',
+        name: 'authorsViewSingle',
+        getComponent(nextState, cb) {
+          const importModules = Promise.all([
+            import ('containers/AuthorsViewSingle/sagas'),
+            import ('containers/AuthorsViewSingle/reducer'),
+            import ('containers/AuthorsViewSingle')
+          ]);
+          const renderRoute = loadModule(cb);
+          importModules.then(([sagas, reducer, component]) => {
+            injectSagas(sagas.default);
+            injectReducer('authorsViewSingle', reducer.default);
+            renderRoute(component);
+          });
+          importModules.catch(errorLoading);
+        }
+      }]
     },{
       path: 'works',
       getComponent(nextState, cb) {

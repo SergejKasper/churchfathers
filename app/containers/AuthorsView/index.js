@@ -6,20 +6,19 @@ import {push } from 'react-router-redux'
 import Timeline from '../../components/Timeline';
 import {loadAuthors} from '../App/actions';
 import {makeSelectLocale} from '../../containers/LanguageProvider/selectors';
-import {setCurrentAuthor} from './actions';
 import {makeSelectAuthors, makeSelectLoading, makeSelectError} from 'containers/App/selectors';
-import {makeSelectCurrentAuthor} from './selectors';
+import {makeSelectCurrentAuthor, makeSelectAuthor} from './selectors';
 import RevealList from '../../components/RevealList';
 
-export class AuthorsView extends React.Component {
+export class AuthorsView extends React.PureComponent {
   componentWillMount() {
-     this.props.fetchAuthors(this.props.locale);
+         this.props.fetchAuthors(this.props.locale);
   }
   selectAndSetLink(authorName){
     if(this.props.currentAuthor !== authorName) this.props.changeLink(authorName.split(" ").join("-"));
   }
   onTimelineChange(event){
-   if(event.unique_id) {
+   if(event.unique_id && event.unique_id !== this.props.currentAuthor) {
      console.log(event.unique_id)
      this.selectAndSetLink(event.unique_id)
    }
@@ -35,8 +34,20 @@ export class AuthorsView extends React.Component {
                 content: 'Description of HomePage'
               }
             ]}/>
-          <Timeline currentSlide={this.getCurrentSlide()} lang={this.props.locale} events={this.props.authors} listeners={{'change' : this.onTimelineChange.bind(this)}} startDateType={'birthDate'} endDateType={'deathDate'} type={"author"} headline={'Church Fathers'} text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
-          {<RevealList content={this.props.currentAuthor || {}} />}
+          <Timeline
+            currentSlide={this.getCurrentSlide()}
+            lang={this.props.locale}
+            events={this.props.authors}
+            listeners={{'change' : this.onTimelineChange.bind(this)}}
+            startDateType={'birthDate'}
+            endDateType={'deathDate'}
+            type={"author"}
+            headline={'Church Fathers'}
+            text={'Title[1] mark<span class=\"tl-note\">Explore the chronology of the church fathers</span>'}/>
+          <div>
+                {this.props.children}
+          </div>
+
     </div>)
   }
 }
@@ -49,14 +60,11 @@ AuthorsView.propTypes = {
 const mapStateToProps = createStructuredSelector({
   authors: makeSelectAuthors(),
   locale: makeSelectLocale(),
-  currentAuthor: makeSelectCurrentAuthor()
+  currentAuthor: makeSelectAuthor()
 });
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    selectAuthor: (evt) => {
-        dispatch(setCurrentAuthor(evt));
-    },
     changeLink: (a)=>{
       dispatch(push('/authors/' + a));
     },

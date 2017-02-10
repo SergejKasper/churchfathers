@@ -5,6 +5,7 @@
 */
 
 import React, { PropTypes } from 'react';
+import GraphqlCMS from 'graphql-auto-generating-cms/lib';
 // import styled from 'styled-components';
 
 import { FormattedMessage } from 'react-intl';

@@ -13,6 +13,12 @@ const makeSelectCurrentAuthor = () => createSelector(
   }
 );
 
+const makeSelectAuthor = () => createSelector(
+  [selectAuthorsView],
+  (authorsViewState) => authorsViewState.getIn(['cmsData','author'])
+);
+
 export {
-  makeSelectCurrentAuthor
+  makeSelectCurrentAuthor,
+  makeSelectAuthor
 }

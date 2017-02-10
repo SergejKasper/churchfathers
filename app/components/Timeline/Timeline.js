@@ -30,6 +30,45 @@ class Timeline extends React.PureComponent {
     lang: PropTypes.string,
     currentSlide: PropTypes.string
   };
+
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events){
+      this.pushNewEventsOnRecieveProps(nextProps);
+    }
+    if(this.timeline && nextProps.currentSlide) {
+      this.timeline.goToId(nextProps.currentSlide)
+    }
+  }
+
+  componentDidMount(){
+    this.timeline = new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
+        // ga_property_id: 'UA-27829802-4',
+        debug: true,
+        language: this.props.lang,
+        script_path: ''
+    });
+    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
+      this.timeline.on(key, this.props.listeners[key].bind(this))
+    });
+  }
+  componentWillUnmount(){
+    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
+      this.timeline.on(key, this.props.listeners[key].bind(this))
+    });
+
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          <div id="timeline" ref="timeline" style={{width: '100%', height: '70vh'}}/>
+        </div>
+      </div>
+    );
+  }
+
   getTitle() {
     return {
       'text' : {
@@ -77,79 +116,80 @@ class Timeline extends React.PureComponent {
           year: 0
         },text: {
           'headline': 'loading'
-        }
+        },
+        unique_id: 'loading'
       }]
     };
   }
 
   pushNewEventsOnRecieveProps(nextProps){
     let removeLast;
-    let displayableEvents = nextProps.events;
-
-    /* if(this.props.events && this.props.events.length) console.log('called with :' + JSON.stringify(this.props.events.map(e => e.name)) + ' replacing' + JSON.stringify(nextProps.events.map(e => e.name)))
-
-    if(this.props.events && this.props.events.length) nextProps.events.filter(event => (this.props.events.map(e => e.name).indexOf(event.name) === -1));
-    let removeableEvents = [];
-    if(this.props.events && this.props.events.length) removeableEvents = this.props.events.filter(event => {
-      let removeEvent = (nextProps.events.map(e => e.name).indexOf(event.name) === -1)
-      if(removeEvent && event.name === this.timeline.current_id) {
-        removeLast = event;
-        return false;
-      }
-      return removeEvent;
-    });*/
-    try{
-      this.props.events.filter(event => {
-        let removeEvent = (nextProps.events.map(e => e.name).indexOf(event.name) === -1)
-        if(removeEvent && event.name === this.timeline.current_id) {
-          removeLast = event;
-          return false;
-        }
-        this.timeline.removeId(event.name)
-        return removeEvent;
-      });
-    } catch (e){
-
+    let displayableEvents;
+    if(!nextProps.events) return;
+    let onAddEvents = () => {
+      this.timeline.goToId(this.props.currentSlide)
+      this.timeline._tl_events.added = []
+      debugger;
+      if(this.timeline.getSlideById('loading')) this.timeline.removeId('loading');
+      this.timeline.setZoom(0)
+      setTimeout(()=>this.timeline.setZoom(89), 400)
     }
-    if(this.props.events){
-      displayableEvents = nextProps.events.filter(event => (this.props.events.map(e => e.name).indexOf(event.name) === -1));
+    if(!this.props.events){
+      displayableEvents = nextProps.events;
+      let configuredEvents = this.configureEvents(displayableEvents, nextProps.type, nextProps.startDateType, nextProps.endDateType, this.props.lang || DEFAULT_LOCALE);
+      this.doAddEvents(configuredEvents).then(onAddEvents);
+    } else {
+        let removeableEvents= this.props.events.filter(event => {
+          let removeEvent = (nextProps.events.map(e => e.name).indexOf(event.name) === -1)
+          if(removeEvent && event.name === this.timeline.current_id) {
+            removeLast = event;
+            return false;
+          }
+          return removeEvent;
+        });
+        this.doRemoveEvents(removeableEvents).then(()=>{
+          if(this.props.events){
+            displayableEvents = nextProps.events.filter(event => (this.props.events.map(e => e.name).indexOf(event.name) === -1));
+          }
+          this.doAddEvents(displayableEvents).then(onAddEvents)
+        })
     }
-    this.configureEvents(displayableEvents, nextProps.type, nextProps.startDateType, nextProps.endDateType, this.props.lang || DEFAULT_LOCALE).forEach((e, i) => setTimeout(() => {this.timeline.add(e); }, i * 50))  //this.timelineå‚‚.setConfig(nextProps.currentSlide)
-    if(removeLast) this.timeline.removeId(removeLast.name);
-    setTimeout(()=>this.timeline.zoomOut(), 200)
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events){
-      this.pushNewEventsOnRecieveProps(nextProps);
-    }
-    /*if(this.timeline && nextProps.currentSlide) {
-      this.timeline.goToId(nextProps.currentSlide)
-    }*/
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    return (nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events);
-  }
-  componentDidMount(){
-    this.timeline = window.timeline =  new window.TL.Timeline(this.refs.timeline, this.getConfig(), {
-        // ga_property_id: 'UA-27829802-4',
-        debug: true,
-        language: this.props.lang,
-        script_path: ''
+  doAddEvents(configuredEvents){
+    return new Promise((resolveMain, rejectMain) => {
+        let addSlidePromises = configuredEvents.reduce((promiseManager, currentSlide, index, arr) => {
+        let slidePromise = new Promise((resolve) => {
+          //when previousSlide is done
+          promiseManager.then(() => {
+            this.timeline.on('added', (el) => {
+               resolve(currentSlide);
+               if(arr.length - 1 === index) resolveMain();
+            })
+            this.timeline.add(currentSlide);
+          })
+        });
+        return slidePromise;
+      }, new Promise((resolve) => resolve()));
     });
-    if(this.props.listeners) Object.keys(this.props.listeners).forEach((key)=>{
-      this.timeline.on(key, this.props.listeners[key].bind(this))
-    });
-    if(this.props.currentSlide) this.timeline.goToId(this.props.currentSlide)
   }
-  render() {
-    return (
-      <div>
-        <div>
-          <div id="timeline" ref="timeline" style={{width: '100%', height: '600px'}}/>
-        </div>
-      </div>
-    );
+
+  doRemoveEvents(removeableEvents, cb){
+    return new Promise((resolve, reject) => {
+      let removeSlidePromises = removeableEvents.reduce((promiseManager, currentSlide, index, arr) => {
+        let slidePromise = new Promise((resolve) => {
+          //when previousSlide is done
+          promiseManager.then(() => {
+            this.timeline.on('removed', (el) => {
+               resolve(currentSlide);
+               if(arr.length - 1 === index) resolve();
+            })
+            this.timeline.removeId(currentSlide.name);
+          })
+        });
+        return slidePromise;
+      }, new Promise((resolve) => resolve()));
+    });
   }
 }
 
