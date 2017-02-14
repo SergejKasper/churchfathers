@@ -37,12 +37,6 @@ class Timeline extends React.PureComponent {
     if(nextProps.events && nextProps.events.length > 0 && nextProps.events !== this.props.events){
       this.pushNewEventsOnRecieveProps(nextProps);
     }
-    if(this.timeline && nextProps.currentSlide) {
-      setTimeout(()=>{
-        console.log('Slide: ' + nextProps.currentSlide);
-        this.timeline.goToId(nextProps.currentSlide)
-      }, 1200)
-    }
   }
 
   componentDidMount(){
@@ -140,9 +134,10 @@ class Timeline extends React.PureComponent {
       if(this.timeline.getSlideById('loading')) this.timeline.removeId('loading');
       this.timeline.setZoom(5)
       setTimeout(()=>{
-        console.log('Slide: ' + nextProps.currentSlide);
         this.timeline.setZoom(1)
-      }, 400)
+        console.log('Slide: ' + nextProps.currentSlide);
+        //this.timeline.goToId(nextProps.currentSlide)
+      }, 800)
     }
     if(!this.props.events){
       displayableEvents = nextProps.events;
